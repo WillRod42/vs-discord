@@ -38,10 +38,12 @@ $(document).ready(function() {
     const messageTimeStamp = timeStamp(message.evtD.timestamp);
     switch	(message.command)	{
       case 'newMessage':
-        console.log(lastAuthor);
-        if(message.evtD.author.avatar && lastAuthor !== message.authorName){
+        if (message.evtD.author.avatar && message.text.includes('https://tenor.com/view/')){
+          $('#display-new-message').append(`<br><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><div class="message-container"><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><img class="gif"src="${message.text}.gif"></div>`)
           lastAuthor = message.authorName;
-          console.log(lastAuthor);
+        }
+        else if(message.evtD.author.avatar && lastAuthor !== message.authorName){
+          lastAuthor = message.authorName;
         $('#display-new-message').append(`<br><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><div class="message-container"><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><p class='user-message'>${message.text}</p></div>`)
         } else if(lastAuthor === message.authorName) {
           $('#display-new-message').append(`<div class="message-container"><p class='user-message-later'>${message.text}</p></div>`)
@@ -54,7 +56,7 @@ $(document).ready(function() {
     }
   });
 });
-
+//  https://tenor.com/view/aww-cute-gif-11008488
 function timeStamp(botTimestamp) {
   const utcDate = botTimestamp;
   const date = new Date(utcDate);
