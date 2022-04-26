@@ -23,7 +23,7 @@ bot.on('message', function (user, userId, channelId, message, evt) {
     args = args.splice(1);
     switch(cmd) {
       case "test":
-				console.log(evt.d)
+				console.log(evt)
       bot.sendMessage({
         to: channelId,
         message: `This test is working. channelId is ${channelId} avatar is ${evt.d.author.avatar} user is: ${user}user ID is ${userId}`

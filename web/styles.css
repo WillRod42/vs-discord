@@ -1,3 +1,7 @@
+body {
+ background-color: #37393e;
+}
+
 .user-icon {
   float: left;
   width: 40px;
@@ -11,6 +15,10 @@
   padding: 0;
 }
 
+.user-timestamp {
+  font-weight: lighter;
+}
+
 .author-name {
   margin: 0;
   padding: 0;
@@ -18,4 +26,12 @@
 }
 .message-container {
   display: inline;
+}
+
+.user-message-later {
+  font-size: 1em;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 45px;
+  padding: 0;
 }
