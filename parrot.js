@@ -1,11 +1,9 @@
 import Discord from 'discord.io';
 import {} from 'dotenv/config'
 
-let selectedGuild;
-let selectedChan = "966012063568789557";
-let parrotChan = "968243023970467901";
-let commandChan = "968243052139405404";
-
+let selectedChan;
+let parrotChan;
+let commandChan;
 
 let bot = new Discord.Client({
   token: process.env.BOT_KEY,

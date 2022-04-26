@@ -2,7 +2,6 @@
 	"name": "parrot",
 	"displayName": "DiscordParrot",
 	"description": "Parrots discord messages between vscode and your discord server",
-  "type": "module",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.66.0"
