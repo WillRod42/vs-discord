@@ -1,0 +1,21 @@
+.user-icon {
+  float: left;
+  width: 40px;
+  border-radius: 100%;
+  margin-right: 5px;
+}
+
+.user-message {
+  font-size: 1em;
+  margin: 0;
+  padding: 0;
+}
+
+.author-name {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+.message-container {
+  display: inline;
+}
