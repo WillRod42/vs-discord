@@ -31,6 +31,7 @@ $(document).ready(function() {
       command: 'alert',
       text: `${userName}: ${chat}`
     })
+    $('#chat').val("");
   });
   // Incoming
   window.addEventListener('message', event => {
