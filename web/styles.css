@@ -38,3 +38,46 @@ body {
 .gif {
   width: 30vmin;
 }
+
+.card {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  width: 500px;
+  text-align: center;
+  float: left;
+  border: solid black 1px;
+  background-color: whitesmoke;
+}
+
+.card-display {
+  /* display: none; */
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 500px;
+  position: relative;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: whitesmoke;
+  background-clip: border-box;
+  border: 1px solid black;
+  border-radius: 0.25rem;
+  font-weight: 600;
+}
+
+#chat-box-header {
+  text-align: center;
+  text-decoration: underline;
+}
+
+button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 200px;
+}
