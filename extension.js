@@ -90,55 +90,7 @@ function activate(context)	{
 
 
 
-function getWebviewContent(message)	{
-	return `<!DOCTYPE html>
-	<html lang="en">
-	<head>
-	<script
-		src="https://code.jquery.com/jquery-3.5.1.min.js"
-		integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-		crossorigin="anonymous"></script>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Test</title>
-	</head>
-	<body>
-		<label>Set your name:</label>
-		<input id="user-name">
-		<button id="set-name">Set Name</button>
-		<div id='display-new-message'></div>
-		<h1 id="test">UserName<h1>
-		<input id="chat">
-		<button id="send-chat">Submit</button>
-		
-		<script type="text/javascript">
-		const vscode = acquireVsCodeApi();
-			$(document).ready(function()	{
-				let chat = "";
-				let userName = "";
-				$('#set-name').on('click', function()	{
-					userName = $('#user-name').val();
-					$('#test').html('<h1>' + userName + '</h1>')
-				})
-				$('#send-chat').on('click', function(){
-					chat = $('#chat').val();
-					vscode.postMessage({
-						command: 'alert',
-						text: userName + ": " + chat
-					})
-				});
-				window.addEventListener('message', event => {
-					const message = event.data;
-					switch	(message.command)	{
-						case 'newMessage':
-							$('#display-new-message').append("<h5>" + message.text + "</h5>")
-							break;
-					}
-				});
-			})
-				</script>
-	</body>
-  </html>`
-}
+// function getWebviewContent(message)	
 function deactivate() {}
 
 function userIdTousername(userId) {
