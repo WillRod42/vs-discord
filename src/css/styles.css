@@ -6,6 +6,7 @@
   text-align: center;
   float: left;
   border: solid black 1px;
+  background-color: whitesmoke;
 }
 
 .card-display {
@@ -17,11 +18,16 @@
   position: relative;
   min-width: 0;
   word-wrap: break-word;
-  background-color: #fff;
+  background-color: whitesmoke;
   background-clip: border-box;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+  border: 1px solid black;
   border-radius: 0.25rem;
   font-weight: 600;
+}
+
+#chat-box-header {
+  text-align: center;
+  text-decoration: underline;
 }
 
 button {
@@ -30,4 +36,8 @@ button {
   margin-left: auto;
   margin-right: auto;
   width: 200px;
+}
+
+body {
+  background-color: rgb(74, 74, 74);
 }
