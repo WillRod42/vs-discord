@@ -24,7 +24,7 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
     args = args.splice(1);
     switch(cmd) {
       case "test":
-				console.log(evt.d)
+				console.log(evt)
       bot.sendMessage({
         to: channelId,
         message: `This test is working. channelId is ${channelId} avatar is ${evt.d.author.avatar} user is: ${user}user ID is ${userId}`
@@ -50,7 +50,6 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 	}
 });
 
-//https://cdn.discordapp.com/avatars/{UserId}/{avatarId}
 function activate(context)	{
 	let panel;
 	context.subscriptions.push(
@@ -61,7 +60,8 @@ function activate(context)	{
 				vscode.ViewColumn.One,
 				{
 					enableScripts: true,
-					localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, "web"))]
+					localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, "web"))],
+					retainContextWhenHidden: true
 				}
 			)
 
