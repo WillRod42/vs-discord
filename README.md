@@ -91,9 +91,6 @@ git clone https://github.com/WillRod42/vs-discord.git
 
 * None
 
------------------------------------------------------------------------------------------------------------
-
-
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
