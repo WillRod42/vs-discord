@@ -116,10 +116,16 @@ body {
   font-size: 1em;
   margin-top: 0;
   margin-bottom: 0;
-  margin-left: 48px;
+  margin-left: 45px;
   padding: 0;
   color: rgb(192, 192, 192);
 }
+
+.user-mentions {
+  background-color: #f9a72b8f;
+  width: 100%;
+}
+
 .gif {
   width: 30vmin;
 }
@@ -165,7 +171,7 @@ body {
 
 #display-new-message {
   padding-left: 20px;
-  height: 86vh;
+  height: 89vh;
   overflow: scroll;
 }
 #chat-box-header {

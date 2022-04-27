@@ -88,17 +88,22 @@ $(document).ready(function() {
         message.messageArray.reverse().forEach(function(userMessage) {
           console.log(userMessage);
           if(userMessage['channel_id'] === currentChannel){
+            let userMessageContent = userMessage.content;
+            if(userMessage.content.match(/<@[0-9]+>/g)) {
+              userMessageContent = userMessageContent.replace(/<@[0-9]+>/, `<span class='user-mentions'>@${userMessage.author.username}</span>`);
+            }
+
             let userMessageTimeStamp = timeStamp(userMessage.timestamp);
             if(userMessage.author.avatar && userMessage.content.includes('https://tenor.com/view/')){
-              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><img class="gif"src="${userMessage.content}.gif"></div>`;
+              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><img class="gif"src="${userMessageContent}.gif"></div>`;
               lastChannelAuthor = userMessage.author.username;
             } else if (userMessage.author.avatar && lastChannelAuthor !== userMessage.author.username){
-              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><p class='user-message'>${userMessage.content}</p></div>`;
+              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><p class='user-message'>${userMessageContent}</p></div>`;
               lastChannelAuthor = userMessage.author.username;
             } else if (lastChannelAuthor === userMessage.author.username) {
-              allChannelMessages += `<div class="message-container"><p class='user-message-later'>${userMessage.content}</p></div>`;
+              allChannelMessages += `<div class="message-container"><p class='user-message-later'>${userMessageContent}</p></div>`;
             } else {
-              allChannelMessages += `<p class="author-name">${userMessage.author.name} ${userMessageTimeStamp}</p><p class='user-message'>${userMessage.content}</p><br>`;
+              allChannelMessages += `<p class="author-name">${userMessage.author.name} ${userMessageTimeStamp}</p><p class='user-message'>${userMessageContent}</p><br>`;
             }
           } 
         });
