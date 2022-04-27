@@ -1,25 +1,35 @@
 // $(document).ready(function() {
 //   $("body").append("<p>It works!</p>");
 // });
-const utcDate = '2022-04-26T20:45:30.517000+00:00'
-// const date = new Date(utcDate);
-// console.log(date.toLocaleString());
+
 
 const vscode = acquireVsCodeApi();
+let currentGuild;
+let currentChannel;
 $(document).ready(function() {
   let chat = "";
-  let userName = "";
+  let userName = "Anonymous";
   let lastAuthor;
   $('#user-name').keyup(function(event) {
     if(event.keyCode === 13)  {
       $('#set-name').click();
     }
-  })
+  });
   $('#set-name').on('click', function()	{
     userName = $('#user-name').val();
-    $('#test').html(`<h1>${userName}</h1>`)
-  })
+    $('#user-name-display').text(`${userName}`)
+    $('#user-name-display').removeClass("hidden");
+    $('#user-name').addClass('hidden');
+    console.log("click working")
+  });
+
+  $('#user-name-display').on('click', function() {
+    $('#user-name').removeClass("hidden");
+    $('#user-name-display').addClass("hidden");
+  });
+
   // Outgoing
+
   $('#chat').keyup(function(event) {
     if(event.keyCode === 13)  {
       $('#send-chat').click();
@@ -29,10 +39,16 @@ $(document).ready(function() {
     chat = $('#chat').val();
     vscode.postMessage({
       command: 'alert',
-      text: `${userName}: ${chat}`
+      text: `${userName}: ${chat}`,
+      guild: `${currentGuild}`,
+      channel: `${currentChannel}`
     })
     $('#chat').val("");
+
+
+
   });
+
   // Incoming
   window.addEventListener('message', event => {
     const message = event.data;
@@ -57,7 +73,55 @@ $(document).ready(function() {
     }
   });
 });
-//  https://tenor.com/view/aww-cute-gif-11008488
+
+window.addEventListener('message', event => {
+  const data = event.data;
+  switch (data.command){
+    case 'load':
+      Object.keys(data.guildNames).forEach(function(guild){
+        let noIcon = "";
+        data.guildNames[guild].name.split(" ").forEach(function(word){
+          noIcon += word[0];
+        });
+        if (data.guildNames[guild].icon){
+        $('.guild-container').append(`<img class='guild-icons' id='${guild}' src='https://cdn.discordapp.com/icons/${data.guildNames[guild].id}/${data.guildNames[guild].icon}.webp'>`);
+        $('.channel-container').append(`<div class='channel-parent-${guild} hidden'></div>`);
+        } else {
+          $('.guild-container').append(`<div class='guild-icons' id='${guild}'>${noIcon}</div>`);
+          $('.channel-container').append(`<div class='channel-parent-${guild} hidden'></div>`);
+        }
+        Object.keys(data.guildNames[guild].channels).forEach(function(channel){
+          let channels = data.guildNames[guild].channels[channel];
+          if (guild === channels['guild_id'] && channels.type === 0){
+          $(`.channel-parent-${guild}`).append(`<p class="channel-names" id='${channels.id}'> <span class="hash-sign">#</span> ${channels.name}</p>`)
+          }
+        });
+      });
+
+      //guild channel select
+    
+      $('.guild-icons').on('click', function() {
+        $(this).addClass("guild-active");
+        $(this).siblings().removeClass("guild-active");
+        $(`.channel-parent-${this.id}`).removeClass('hidden');
+        $(`.channel-parent-${this.id}`).siblings().addClass('hidden');
+        currentGuild = this.id;
+      });
+
+      $('.channel-names').on('click', function() {
+        $(this).addClass("channel-active");
+        $(this).siblings().removeClass("channel-active");
+        currentChannel = this.id;
+        $('#chat-box-header').html(`<span class="hash-sign">#</span> ${data.channelNames[this.id].name}`);
+        $('#chat').attr('placeholder',`Send Message To: # ${data.channelNames[this.id].name}`)
+      });
+
+      console.log(data.guildNames);
+      console.log(data.channelNames);
+      
+  } 
+});
+
 function timeStamp(botTimestamp) {
   const utcDate = botTimestamp;
   const date = new Date(utcDate);

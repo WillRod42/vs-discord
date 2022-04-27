@@ -8,26 +8,22 @@
   <meta charset="UTF-8">
 </head>
 <body>
-  <div class="container">
-    <div class="row">
-      <div class="card">
-      <h4>Set Username:</h4>
-      <input id="user-name">
-      <button id="set-name">Set Name</button>
-      </div>
-    
+  <div class="guild-container"></div>
+  <div class="channel-container"></div>
+  <div class="user-container">
+    <p id="user-name-display">Click to set name</p>
+    <input id="user-name" class="hidden">
+    <button id="set-name" class="hidden">Set Name</button> 
+  </div>
 
-      <div class="card">
-        <h4 id="test">Send Chat To Discord:</h4>
-        <input id="chat">
-        <button id="send-chat">Submit</button>
-      </div>
-    </div>
-
-    <div class="card-display">
+    <div id="chat-box-container">
       <h4 id="chat-box-header">Chat Box</h4>
       <div id='display-new-message'></div>
+  
+      <input id="chat" placeholder="">
+      <button id="send-chat" class="hidden">Submit</button>
     </div>
-  </div>
+
+    
 </body>
 </html>
