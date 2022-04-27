@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const fs = require("fs");
-const Discord = require ('discord.io');
+const Discord = require('discord.io');
+const fetch = require("node-fetch");
 const path = require('path');
 require("dotenv").config({ path: path.resolve(__dirname, './.env') });
 
@@ -15,7 +16,7 @@ bot.on('ready', function() {
   console.log('Logged in as %s - %s\n', bot.username, bot.id);
 });
 
-bot.on('message', function (user, userId, channelId, message, evt) {
+bot.on('message', async function (user, userId, channelId, message, evt) {
 	if (message.substring(0,1) === '!') {
     let args = message.substring(1).split(" ");
     let cmd = args[0];
@@ -40,8 +41,9 @@ bot.on('message', function (user, userId, channelId, message, evt) {
     }
   } else {
 		let incomingMessage = message;
-		if (incomingMessage.includes("@")) {
-			incomingMessage.replace(/<@[0-9]+>/g, `@${userIdTousername(incomingMessage.substring(incomingMessage.indexOf("@") + 1, incomingMessage.indexOf(">")))}`);
+		while (incomingMessage.match(/<@[0-9]+>/g)) {
+			let user = await replaceMentions(incomingMessage);
+			incomingMessage = incomingMessage.replace(/<@[0-9]+>/, "@" + user.username);
 		}
 
 		vscode.commands.executeCommand("parrot.helloWorld", user, incomingMessage, evt.d, userId);
@@ -109,12 +111,17 @@ function activate(context)	{
 
 function deactivate() {}
 
-function userIdTousername(userId) {
-	console.log("userId: " + userId);
-	return (Object.values(bot.users).find(user => {
-		console.log("user: " + user);
-		return user.id === userId;
-	})).username;
+function userIdToUsername(userId) {
+	return fetch(`https://discord.com/api/v9/users/${userId}`, {
+		method: "GET",
+		headers: {"Authorization": `Bot ${process.env.BOT_KEY}`}
+	})
+	.then(response => response.json())
+	.catch(error => console.log(error));
+}
+
+function replaceMentions(message) {
+	return userIdToUsername(message.substring(message.indexOf("<") + 2, message.indexOf(">")));
 }
 
 module.exports = {
