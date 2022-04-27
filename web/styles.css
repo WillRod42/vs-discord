@@ -1,22 +1,26 @@
 body {
  background-color: #37393e;
+ color: #ffffff;
 }
 
 .user-icon {
-  float: left;
+  position: absolute;
+  left: 16px;
   width: 40px;
   border-radius: 100%;
   margin-right: 5px;
+  margin-top: calc(4px - 0.125rem);
 }
 
 .user-message {
   font-size: 1em;
-  margin: 0;
-  padding: 0;
+  color: rgb(192, 192, 192);
+  margin-bottom: 0;
 }
 
 .user-timestamp {
   font-weight: lighter;
+  color: rgb(192, 192, 192);
 }
 
 .author-name {
@@ -25,16 +29,60 @@ body {
   font-weight: bold;
 }
 .message-container {
-  display: inline;
+  padding-left:45px;
 }
 
 .user-message-later {
   font-size: 1em;
   margin-top: 0;
   margin-bottom: 0;
-  margin-left: 45px;
   padding: 0;
+  color: rgb(192, 192, 192);
 }
 .gif {
   width: 30vmin;
+}
+
+.card {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  width: 500px;
+  text-align: center;
+  float: left;
+  border: solid black 1px;
+  background-color: #2f3136;
+}
+
+.card-display {
+  /* display: none; */
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  margin-bottom: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  width: 1000px;
+  position: relative;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #2f3136;
+  background-clip: border-box;
+  border: 1px solid black;
+  border-radius: 0.25rem;
+  font-weight: 600;
+}
+
+#chat-box-header {
+  text-align: center;
+  text-decoration: underline;
+}
+
+button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 200px;
 }
