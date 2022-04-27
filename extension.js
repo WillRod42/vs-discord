@@ -4,6 +4,7 @@ const Discord = require('discord.io');
 const fetch = require("node-fetch");
 const path = require('path');
 require("dotenv").config({ path: path.resolve(__dirname, './.env') });
+import CatFact from './cat-fact-api.js';
 
 let replyChannelId;
 
@@ -41,6 +42,12 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 					message: "Channel set"
 				});
 				break;
+				case "catfact":
+					let catPromise = CatFact.getFact();
+					catPromise.then(function(response) {
+						let body = JSON.parse(response);
+						bot.sendMessage({to: channelId, message: body})
+					})
     }
   } else {
 		let incomingMessage = message;
