@@ -87,7 +87,7 @@ function activate(context)	{
 					switch	(message.command)	{
 						case 'alert':
 							bot.sendMessage({
-								to: replyChannelId,
+								to: message.channel,
 								message: message.text
 							})
 							// vscode.window.showInformationMessage(message.text);

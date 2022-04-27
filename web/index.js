@@ -8,7 +8,7 @@ let currentGuild;
 let currentChannel;
 $(document).ready(function() {
   let chat = "";
-  let userName = "";
+  let userName = "Anonymous";
   let lastAuthor;
   $('#user-name').keyup(function(event) {
     if(event.keyCode === 13)  {
@@ -93,7 +93,7 @@ window.addEventListener('message', event => {
         Object.keys(data.guildNames[guild].channels).forEach(function(channel){
           let channels = data.guildNames[guild].channels[channel];
           if (guild === channels['guild_id'] && channels.type === 0){
-          $(`.channel-parent-${guild}`).append(`<p class="channel-names" id='${channels.id}'># ${channels.name}</p>`)
+          $(`.channel-parent-${guild}`).append(`<p class="channel-names" id='${channels.id}'> <span class="hash-sign">#</span> ${channels.name}</p>`)
           }
         });
       });
@@ -112,9 +112,12 @@ window.addEventListener('message', event => {
         $(this).addClass("channel-active");
         $(this).siblings().removeClass("channel-active");
         currentChannel = this.id;
+        $('#chat-box-header').html(`<span class="hash-sign">#</span> ${data.channelNames[this.id].name}`);
+        $('#chat').attr('placeholder',`Send Message To: # ${data.channelNames[this.id].name}`)
       });
 
       console.log(data.guildNames);
+      console.log(data.channelNames);
       
   } 
 });

@@ -51,6 +51,10 @@ body {
   overflow: scroll;
   padding: 10px;
 }
+.channel-names {
+  padding: 4px;
+  margin: 0px;
+}
 .channel-names:hover {
   background-color: #37393e;
   border-radius: 3px;
@@ -62,6 +66,9 @@ body {
   cursor: pointer;
 }
 
+.hash-sign {
+  font-size: 1.4em;
+}
 .user-container {
   position: fixed;
   bottom: 0;
@@ -74,7 +81,7 @@ body {
 
 .user-icon {
   position: absolute;
-  left: 16px;
+  left: 325px;
   width: 40px;
   border-radius: 100%;
   margin-right: 5px;
@@ -95,6 +102,7 @@ body {
 .author-name {
   margin: 0;
   padding: 0;
+  padding-top:5px;
   font-weight: bold;
 }
 .message-container {
@@ -143,9 +151,33 @@ body {
   font-weight: 600;
 }
 
+#chat-box-container {
+  margin-left: 312px;
+  padding-left: 10px;
+}
+
+#display-new-message {
+  padding-left: 20px;
+}
 #chat-box-header {
-  text-align: center;
-  text-decoration: underline;
+padding: 4px;
+}
+
+#chat {
+  position: fixed;
+  bottom: 0;
+  margin: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  width: 70vw;
+  height: 2.5em;
+  background-color: #47494e;
+  border: none;
+  color: #ffffff;
+}
+
+#chat:focus {
+  outline: none;
 }
 
 button {
