@@ -4,7 +4,7 @@ const Discord = require('discord.io');
 const fetch = require("node-fetch");
 const path = require('path');
 require("dotenv").config({ path: path.resolve(__dirname, './.env') });
-import CatFact from './cat-fact-api.js';
+// const CatFact = require('./cat-fact-api.js');
 
 
 let selectedChannelMessages = [];
@@ -57,7 +57,7 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 		}
 
 	
-		vscode.commands.executeCommand("parrot.selectChannel", selectedChannelMessages);
+		// vscode.commands.executeCommand("parrot.selectChannel", selectedChannelMessages);
 		vscode.commands.executeCommand("parrot.helloWorld", user, incomingMessage, evt.d, userId);
 	}
 });
