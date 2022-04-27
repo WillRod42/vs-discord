@@ -43,6 +43,10 @@ $(document).ready(function() {
       guild: `${currentGuild}`,
       channel: `${currentChannel}`
     })
+    vscode.postMessage({
+      command: "channel",
+      selectedChannelId: `${currentChannel}`
+    })
     $('#chat').val("");
 
 
@@ -50,11 +54,14 @@ $(document).ready(function() {
   });
 
   // Incoming
+  
   window.addEventListener('message', event => {
     const message = event.data;
-    const messageTimeStamp = timeStamp(message.evtD.timestamp);
+    //console.log(message.evtD.timestamp)
+    // const messageTimeStamp = timeStamp(message.evtD.timestamp);
     switch	(message.command)	{
       case 'newMessage':
+        const messageTimeStamp = timeStamp(message.evtD.timestamp);
         if (message.evtD.author.avatar && message.text.includes('https://tenor.com/view/')){
           $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><img class="gif"src="${message.text}.gif"></div>`)
           lastAuthor = message.authorName;
@@ -68,8 +75,36 @@ $(document).ready(function() {
         else {
         $('#display-new-message').append(`<p class="author-name">${message.authorName} ${messageTimeStamp}</p><p class='user-message'>${message.text}</p><br>`)
         }
+        vscode.postMessage({
+          command: "channel",
+          selectedChannelId: `${currentChannel}`
+        });
         break;
-        
+      
+      case 'getChannelMessages':
+        let allChannelMessages ="";
+        let lastChannelAuthor;
+        console.log(message.messageArray);
+        message.messageArray.reverse().forEach(function(userMessage) {
+          console.log(userMessage);
+          if(userMessage['channel_id'] === currentChannel){
+            let userMessageTimeStamp = timeStamp(userMessage.timestamp);
+            if(userMessage.author.avatar && userMessage.content.includes('https://tenor.com/view/')){
+              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><img class="gif"src="${userMessage.content}.gif"></div>`;
+              lastChannelAuthor = userMessage.author.username;
+            } else if (userMessage.author.avatar && lastChannelAuthor !== userMessage.author.username){
+              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><p class='user-message'>${userMessage.content}</p></div>`;
+              lastChannelAuthor = userMessage.author.username;
+            } else if (lastChannelAuthor === userMessage.author.username) {
+              allChannelMessages += `<div class="message-container"><p class='user-message-later'>${userMessage.content}</p></div>`;
+            } else {
+              allChannelMessages += `<p class="author-name">${userMessage.author.name} ${userMessageTimeStamp}</p><p class='user-message'>${userMessage.content}</p><br>`;
+            }
+          } 
+        });
+        $('#display-new-message').empty();
+        $('#display-new-message').append(allChannelMessages);
+        break;
     }
   });
 });
@@ -109,9 +144,13 @@ window.addEventListener('message', event => {
       });
 
       $('.channel-names').on('click', function() {
+        currentChannel = this.id;
+        vscode.postMessage({
+          command: "channel",
+          selectedChannelId: `${currentChannel}`
+        });
         $(this).addClass("channel-active");
         $(this).siblings().removeClass("channel-active");
-        currentChannel = this.id;
         $('#chat-box-header').html(`<span class="hash-sign">#</span> ${data.channelNames[this.id].name}`);
         $('#chat').attr('placeholder',`Send Message To: # ${data.channelNames[this.id].name}`)
       });
@@ -125,5 +164,6 @@ window.addEventListener('message', event => {
 function timeStamp(botTimestamp) {
   const utcDate = botTimestamp;
   const date = new Date(utcDate);
-  return date.toLocaleString().slice(-10);
+  return date.toLocaleString().slice(-11);
 }
+

@@ -4,7 +4,8 @@ const Discord = require ('discord.io');
 const path = require('path');
 require("dotenv").config({ path: path.resolve(__dirname, './.env') });
 
-let replyChannelId;
+
+let selectedChannelMessages = [];
 
 let bot = new Discord.Client({
   token: process.env.BOT_KEY,
@@ -16,6 +17,7 @@ bot.on('ready', function(event) {
   console.log('Logged in as %s - %s\n', bot.username, bot.id);
 	// console.log(event);
 	vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels);
+	
 });
 
 bot.on('message', function (user, userId, channelId, message, evt) {
@@ -26,7 +28,6 @@ bot.on('message', function (user, userId, channelId, message, evt) {
     args = args.splice(1);
     switch(cmd) {
       case "test":
-				console.log(evt)
       bot.sendMessage({
         to: channelId,
         message: `This test is working. channelId is ${channelId} avatar is ${evt.d.author.avatar} user is: ${user}user ID is ${userId}`
@@ -34,7 +35,6 @@ bot.on('message', function (user, userId, channelId, message, evt) {
       });
       break;
 			case "set":
-				replyChannelId = channelId;
 				bot.sendMessage({
 					to: channelId,
 					message: "Channel set"
@@ -47,9 +47,12 @@ bot.on('message', function (user, userId, channelId, message, evt) {
 			incomingMessage.replace(/<@[0-9]+>/g, `@${userIdTousername(incomingMessage.substring(incomingMessage.indexOf("@") + 1, incomingMessage.indexOf(">")))}`);
 		}
 
+	
+		vscode.commands.executeCommand("parrot.selectChannel", selectedChannelMessages);
 		vscode.commands.executeCommand("parrot.helloWorld", user, incomingMessage, evt.d, userId);
-	}5
+	}
 });
+
 
 function activate(context)	{
 	let panel;
@@ -90,7 +93,15 @@ function activate(context)	{
 								to: message.channel,
 								message: message.text
 							})
-							// vscode.window.showInformationMessage(message.text);
+							break;
+						case 'channel':
+							bot.getMessages({
+								channelID: message.selectedChannelId,
+								limit: "50"}, function(error, messages) {
+									selectedChannelMessages = messages;
+									vscode.commands.executeCommand("parrot.selectChannel", selectedChannelMessages);
+								})
+							
 							return;
 					}
 				},
@@ -110,6 +121,11 @@ function activate(context)	{
 			// vscode.window.showInformationMessage(message);
 			panel.webview.postMessage({command: 'newMessage', authorName: userName ,text: message, evtD: evt, authorId: userId});
 			console.log(message);
+		})
+	);
+	context.subscriptions.push(
+		vscode.commands.registerCommand('parrot.selectChannel', async function(channelMessages){
+			await panel.webview.postMessage({command: 'getChannelMessages', messageArray: channelMessages});
 		})
 	);
 }
