@@ -158,6 +158,8 @@ body {
 
 #display-new-message {
   padding-left: 20px;
+  height: 88vh;
+  overflow: scroll;
 }
 #chat-box-header {
 padding: 4px;
