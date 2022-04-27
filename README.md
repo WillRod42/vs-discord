@@ -1,65 +1,80 @@
-# parrot README
+# Discord Parrot
 
-This is the README for your extension "parrot". After writing up a brief description, we recommend including the following sections.
+A VSCode extension that allows you to use your own Discord Bot to send and receive messages in VSCode from Discord.
 
-## Features
+## Technologies Used
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+* HTML
+* CSS
+* Bootstrap
+* JavaScript
+* jQuery
+* npm
+* webpack
+* ESLint
+* Discord API
+* discord.io
+* ...
 
-For example if there is an image subfolder under your extension project workspace:
+## Setup/Installation Requirements
 
-\!\[feature X\]\(images/feature-x.png\)
+### Getting the Repository
+* Clone this repository to your desktop or any directory of your choice
+  * Run the command below in a bash terminal with [git](https://github.com/git-guides/install-git) installed
+```
+git clone https://github.com/WillRod42/vs-discord.git
+```
+* Or download as a zip file
+  * Click the green code button on the repository page
+  * At the bottom of the popup window select `Download ZIP`
+  * Extract the downloaded .zip folder
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### Installing Dependencies
 
-## Requirements
+* Make sure you have [node](https://nodejs.org/en/download/) installed
+* Open bash terminal in the top level of this directory
+* run `npm install` to install dependencies
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+### Creating a Discord Bot
 
-## Extension Settings
+* This project does not include a discord bot, you must create your own in order to use this extension
+  * Remember to read and follow [Discord's Developer Terms of Service](https://discord.com/developers/docs/policies-and-agreements/terms-of-service)
+  * Create a Discord bot and use this project _**at your own risk**_
+* Log in to your discord account and go [Discord's Developer Portal](https://discordapp.com/developers/applications/me)
+  * If you do not already have a discord account, create one [here](https://discord.com/)
+* In the `Applications` tab, click the `New Application` button in the top right
+* Name a create a new application
+* On the left, select the `Bot` tab, and inside click the `Add Bot` button
+* Give the bot a name in the username textbox
+* Click the `Reset Token` button and copy the key
+  * __Do not__ share this with anyone, this key grants control over your bot
+* Go back to the project directory and create a file named `.env`
+  * Inside add this line and save the file
+  ```
+  API_KEY=<Your key here without brackets>
+  ```
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### Adding the Bot to Your Server
 
-For example:
+* You will need to add your bot to the server you want to message on
+  * You will need a user on the server with the appropriate permissions to add the bot for you
+* Log in to your discord account and go [Discord's Developer Portal](https://discordapp.com/developers/applications/me)
+* Select your application, click the `OAuth2` tab, and click `URL Generator` underneath that 
+* Under `scopes`, select the `bot` checkbox and under `bot permissions` select the `Administrator` checkbox
+* Have your authorized user open the generated link at the bottom to add your bot to the server
 
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+* None
 
-## Release Notes
 
-Users appreciate release notes as you update your extension.
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
 
 -----------------------------------------------------------------------------------------------------------
 
-## Working with Markdown
+## License
 
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+MIT
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Copyright (c) 2022 William Rodriguez
