@@ -89,7 +89,6 @@ $(document).ready(function() {
                 userMessageContent = userMessageContent.replaceAll(`<@${mention.id}>`, `<span class='user-mentions'>@${mention.username}</span>`);
               });
             }
-
             let userMessageTimeStamp = timeStamp(userMessage.timestamp);
             if(userMessage.author.avatar && userMessage.content.includes('https://tenor.com/view/')){
               allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><img class="gif"src="${userMessageContent}.gif"></div>`;
