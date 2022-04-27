@@ -17,7 +17,6 @@ let bot = new Discord.Client({
 
 bot.on('ready', function(event) {
   console.log('Logged in as %s - %s\n', bot.username, bot.id);
-	// console.log(event);
 	vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels);
 	
 });
@@ -127,7 +126,6 @@ function activate(context)	{
 	console.log('Congratulations, your extension "parrot" is now active!');
 	context.subscriptions.push(
 		vscode.commands.registerCommand('parrot.helloWorld', function(userName, message, evt, userId) {
-			// vscode.window.showInformationMessage(message);
 			panel.webview.postMessage({command: 'newMessage', authorName: userName ,text: message, evtD: evt, authorId: userId});
 			console.log(message);
 		})

@@ -1,8 +1,3 @@
-// $(document).ready(function() {
-//   $("body").append("<p>It works!</p>");
-// });
-
-
 const vscode = acquireVsCodeApi();
 let currentGuild;
 let currentChannel;
@@ -84,15 +79,16 @@ $(document).ready(function() {
       case 'getChannelMessages':
         let allChannelMessages ="";
         let lastChannelAuthor;
-        console.log(message.messageArray);
+        // console.log(message.messageArray);
         message.messageArray.reverse().forEach(function(userMessage) {
           console.log(userMessage);
           if(userMessage['channel_id'] === currentChannel){
             let userMessageContent = userMessage.content;
             if(userMessage.content.match(/<@[0-9]+>/g)) {
-              userMessageContent = userMessageContent.replace(/<@[0-9]+>/, `<span class='user-mentions'>@${userMessage.author.username}</span>`);
+              userMessage.mentions.forEach(function(mention){
+                userMessageContent = userMessageContent.replaceAll(`<@${mention.id}>`, `<span class='user-mentions'>@${mention.username}</span>`);
+              });
             }
-
             let userMessageTimeStamp = timeStamp(userMessage.timestamp);
             if(userMessage.author.avatar && userMessage.content.includes('https://tenor.com/view/')){
               allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><img class="gif"src="${userMessageContent}.gif"></div>`;
@@ -159,9 +155,6 @@ window.addEventListener('message', event => {
         $('#chat-box-header').html(`<span class="hash-sign">#</span> ${data.channelNames[this.id].name}`);
         $('#chat').attr('placeholder',`Send Message To: # ${data.channelNames[this.id].name}`)
       });
-
-      console.log(data.guildNames);
-      console.log(data.channelNames);
       
   } 
 });
@@ -171,4 +164,3 @@ function timeStamp(botTimestamp) {
   const date = new Date(utcDate);
   return date.toLocaleString().slice(-11);
 }
-
