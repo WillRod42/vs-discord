@@ -40,12 +40,12 @@ $(document).ready(function() {
     switch	(message.command)	{
       case 'newMessage':
         if (message.evtD.author.avatar && message.text.includes('https://tenor.com/view/')){
-          $('#display-new-message').append(`<br><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><div class="message-container"><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><img class="gif"src="${message.text}.gif"></div>`)
+          $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><img class="gif"src="${message.text}.gif"></div>`)
           lastAuthor = message.authorName;
         }
         else if(message.evtD.author.avatar && lastAuthor !== message.authorName){
           lastAuthor = message.authorName;
-        $('#display-new-message').append(`<br><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><div class="message-container"><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><p class='user-message'>${message.text}</p></div>`)
+        $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><p class='user-message'>${message.text}</p></div>`)
         } else if(lastAuthor === message.authorName) {
           $('#display-new-message').append(`<div class="message-container"><p class='user-message-later'>${message.text}</p></div>`)
         }
