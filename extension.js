@@ -11,8 +11,11 @@ let bot = new Discord.Client({
   autorun: true
 });
 
-bot.on('ready', function() {
+
+bot.on('ready', function(event) {
   console.log('Logged in as %s - %s\n', bot.username, bot.id);
+	// console.log(event);
+	vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels);
 });
 
 bot.on('message', function (user, userId, channelId, message, evt) {
@@ -45,7 +48,7 @@ bot.on('message', function (user, userId, channelId, message, evt) {
 		}
 
 		vscode.commands.executeCommand("parrot.helloWorld", user, incomingMessage, evt.d, userId);
-	}
+	}5
 });
 
 function activate(context)	{
@@ -78,7 +81,7 @@ function activate(context)	{
 
 			panel.webview.html = htmlString;
 			
-			// panel.webview.html = getWebviewContent(message);
+		
 			panel.webview.onDidReceiveMessage(
 				message => {
 					switch	(message.command)	{
@@ -87,7 +90,7 @@ function activate(context)	{
 								to: replyChannelId,
 								message: message.text
 							})
-							vscode.window.showInformationMessage(message.text);
+							// vscode.window.showInformationMessage(message.text);
 							return;
 					}
 				},
@@ -96,11 +99,15 @@ function activate(context)	{
 			);
 		})
 	);
-
+	context.subscriptions.push(
+		vscode.commands.registerCommand('parrot.load', function(guilds, channels) {
+			panel.webview.postMessage({command: 'load', guildNames: guilds, channelNames: channels });
+		})
+	);
 	console.log('Congratulations, your extension "parrot" is now active!');
 	context.subscriptions.push(
 		vscode.commands.registerCommand('parrot.helloWorld', function(userName, message, evt, userId) {
-			vscode.window.showInformationMessage(message);
+			// vscode.window.showInformationMessage(message);
 			panel.webview.postMessage({command: 'newMessage', authorName: userName ,text: message, evtD: evt, authorId: userId});
 			console.log(message);
 		})
