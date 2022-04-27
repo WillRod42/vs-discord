@@ -42,12 +42,20 @@ git clone https://github.com/WillRod42/vs-discord.git
   * Create a Discord bot and use this project _**at your own risk**_
 * Log in to your discord account and go [Discord's Developer Portal](https://discordapp.com/developers/applications/me)
   * If you do not already have a discord account, create one [here](https://discord.com/)
-* In the `Applications` tab, click the `New Application` button in the top right
-* Name a create a new application
-* On the left, select the `Bot` tab, and inside click the `Add Bot` button
+* In the `Applications` tab, click the `New Application` button in the top right<br><br>
+
+![](ref/create-project.gif)<br><br>
+
+* On the left, select the `Bot` tab, and inside click the `Add Bot` button<br><br>
+
+![](ref/create-bot.gif)
+
 * Give the bot a name in the username textbox
 * Click the `Reset Token` button and copy the key
-  * __Do not__ share this with anyone, this key grants control over your bot
+  * __Do not__ share this with anyone, this key grants control over your bot<br><br>
+
+![](ref/get-token.gif)<br><br>
+
 * Go back to the project directory and create a file named `.env`
   * Inside add this line and save the file
   ```
@@ -60,7 +68,10 @@ git clone https://github.com/WillRod42/vs-discord.git
   * You will need a user on the server with the appropriate permissions to add the bot for you
 * Log in to your discord account and go [Discord's Developer Portal](https://discordapp.com/developers/applications/me)
 * Select your application, click the `OAuth2` tab, and click `URL Generator` underneath that 
-* Under `scopes`, select the `bot` checkbox and under `bot permissions` select the `Administrator` checkbox
+* Under `scopes`, select the `bot` checkbox and under `bot permissions` select the `Administrator` checkbox<br><br>
+
+![](ref/get-url.gif)<br><br>
+
 * Have your authorized user open the generated link at the bottom to add your bot to the server
 
 
