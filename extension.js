@@ -25,7 +25,7 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 	if (message.substring(0,1) === '!') {
     let args = message.substring(1).split(" ");
     let cmd = args[0];
-
+		console.log(message);
     args = args.splice(1);
     switch(cmd) {
       case "test":
@@ -56,7 +56,6 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 		}
 
 	
-		// vscode.commands.executeCommand("parrot.selectChannel", selectedChannelMessages);
 		vscode.commands.executeCommand("parrot.helloWorld", user, incomingMessage, evt.d, userId);
 	}
 });
@@ -101,6 +100,7 @@ function activate(context)	{
 								to: message.channel,
 								message: message.text
 							})
+							console.log('alert working');
 							break;
 						case 'channel':
 							bot.getMessages({

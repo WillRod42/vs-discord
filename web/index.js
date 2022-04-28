@@ -38,10 +38,6 @@ $(document).ready(function() {
       guild: `${currentGuild}`,
       channel: `${currentChannel}`
     })
-    vscode.postMessage({
-      command: "channel",
-      selectedChannelId: `${currentChannel}`
-    })
     $('#chat').val("");
 
 
@@ -57,6 +53,7 @@ $(document).ready(function() {
     switch	(message.command)	{
       case 'newMessage':
         const messageTimeStamp = timeStamp(message.evtD.timestamp);
+        console.log(message.text);
         if (message.evtD.author.avatar && message.text.includes('https://tenor.com/view/')){
           $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><img class="gif"src="${message.text}.gif"></div>`)
           lastAuthor = message.authorName;
@@ -68,12 +65,9 @@ $(document).ready(function() {
           $('#display-new-message').append(`<div class="message-container"><p class='user-message-later'>${message.text}</p></div>`)
         }
         else {
-        $('#display-new-message').append(`<p class="author-name">${message.authorName} ${messageTimeStamp}</p><p class='user-message'>${message.text}</p><br>`)
+          lastAuthor = message.authorName;
+        $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.iconscout.com/icon/free/png-256/discord-3691244-3073764.png'><p class="author-name">${message.authorName} ${messageTimeStamp}</p><p class='user-message'>${message.text}</p>,</div>`)
         }
-        vscode.postMessage({
-          command: "channel",
-          selectedChannelId: `${currentChannel}`
-        });
         break;
       
       case 'getChannelMessages':
@@ -91,15 +85,17 @@ $(document).ready(function() {
             }
             let userMessageTimeStamp = timeStamp(userMessage.timestamp);
             if(userMessage.author.avatar && userMessage.content.includes('https://tenor.com/view/')){
-              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><img class="gif"src="${userMessageContent}.gif"></div>`;
+              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}</span></p><img class="gif"src="${userMessageContent}.gif"></div>`;
               lastChannelAuthor = userMessage.author.username;
             } else if (userMessage.author.avatar && lastChannelAuthor !== userMessage.author.username){
-              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}<span></p><p class='user-message'>${userMessageContent}</p></div>`;
+              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}</span></p><p class='user-message'>${userMessageContent}</p></div>`;
               lastChannelAuthor = userMessage.author.username;
             } else if (lastChannelAuthor === userMessage.author.username) {
               allChannelMessages += `<div class="message-container"><p class='user-message-later'>${userMessageContent}</p></div>`;
+              lastChannelAuthor = userMessage.author.username;
             } else {
-              allChannelMessages += `<p class="author-name">${userMessage.author.name} ${userMessageTimeStamp}</p><p class='user-message'>${userMessageContent}</p><br>`;
+              lastChannelAuthor = userMessage.author.username;
+              allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.iconscout.com/icon/free/png-256/discord-3691244-3073764.png'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}</span></p><p class='user-message'>${userMessageContent}</p></div>`;
             }
           } 
         });
@@ -114,26 +110,29 @@ window.addEventListener('message', event => {
   const data = event.data;
   switch (data.command){
     case 'load':
+      console.log(data)
       Object.keys(data.guildNames).forEach(function(guild){
         let noIcon = "";
-        data.guildNames[guild].name.split(" ").forEach(function(word){
-          noIcon += word[0];
-        });
-        if (data.guildNames[guild].icon){
-        $('.guild-container').append(`<img class='guild-icons' id='${guild}' src='https://cdn.discordapp.com/icons/${data.guildNames[guild].id}/${data.guildNames[guild].icon}.webp'>`);
-        $('.channel-container').append(`<div class='channel-parent-${guild} hidden'></div>`);
-        } else {
-          $('.guild-container').append(`<div class='guild-icons' id='${guild}'>${noIcon}</div>`);
+        if(!data.guildNames[guild].unavailable){
+          data.guildNames[guild].name.split(" ").forEach(function(word){
+            noIcon += word[0];
+          });
+          if (data.guildNames[guild].icon){
+          $('.guild-container').append(`<img class='guild-icons' id='${guild}' src='https://cdn.discordapp.com/icons/${data.guildNames[guild].id}/${data.guildNames[guild].icon}.webp'>`);
           $('.channel-container').append(`<div class='channel-parent-${guild} hidden'></div>`);
-        }
-        Object.keys(data.guildNames[guild].channels).forEach(function(channel){
-          let channels = data.guildNames[guild].channels[channel];
-          if (guild === channels['guild_id'] && channels.type === 0){
-          $(`.channel-parent-${guild}`).append(`<p class="channel-names" id='${channels.id}'> <span class="hash-sign">#</span> ${channels.name}</p>`)
+          } else {
+            $('.guild-container').append(`<div class='guild-icons' id='${guild}'>${noIcon}</div>`);
+            $('.channel-container').append(`<div class='channel-parent-${guild} hidden'></div>`);
           }
-        });
+          Object.keys(data.guildNames[guild].channels).forEach(function(channel){
+            let channels = data.guildNames[guild].channels[channel];
+            if (guild === channels['guild_id'] && channels.type === 0){
+            $(`.channel-parent-${guild}`).append(`<p class="channel-names" id='${channels.id}'> <span class="hash-sign">#</span> ${channels.name}</p>`)
+            }
+          });
+        }
       });
-
+    
       //guild channel select
     
       $('.guild-icons').on('click', function() {
