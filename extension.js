@@ -4,8 +4,6 @@ const Discord = require('discord.io');
 const fetch = require("node-fetch");
 const path = require('path');
 require("dotenv").config({ path: path.resolve(__dirname, './.env') });
-// const CatFact = require('./cat-fact-api.js');
-
 
 let selectedChannelMessages = [];
 
@@ -15,7 +13,6 @@ let bot = new Discord.Client({
 });
 
 bot.on('ready', function(event) {
-  console.log('Logged in as %s - %s\n');
 
 	vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels)
 	.then(edit => {
@@ -24,7 +21,7 @@ bot.on('ready', function(event) {
 		return vscode.workspace.applyEdit(edit);
 })
 	.then(undefined, err => {
-	 console.error('I am error');
+	console.error('error handled');
 })
 	
 });
@@ -33,28 +30,14 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 	if (message.substring(0,1) === '!') {
     let args = message.substring(1).split(" ");
     let cmd = args[0];
-		console.log(message);
     args = args.splice(1);
     switch(cmd) {
-      case "test":
-      bot.sendMessage({
-        to: channelId,
-        message: `This test is working. channelId is ${channelId} avatar is ${evt.d.author.avatar} user is: ${user}user ID is ${userId}`
-				
-      });
-      break;
-			case "set":
-				bot.sendMessage({
-					to: channelId,
-					message: "Channel set"
-				});
-				break;
 				case "catfact":
-					let catPromise = CatFact.getFact();
-					catPromise.then(function(response) {
-						let body = JSON.parse(response);
-						bot.sendMessage({to: channelId, message: body})
+					await getCatFact()
+						.then(function(response) {
+						bot.sendMessage({to: channelId, message: ` ${response.fact}`})
 					})
+					break;
     }
   } else {
 		let incomingMessage = message;
@@ -108,7 +91,6 @@ function activate(context)	{
 								to: message.channel,
 								message: message.text
 							})
-							console.log('alert working');
 							break;
 						case 'channel':
 							bot.getMessages({
@@ -132,11 +114,9 @@ function activate(context)	{
 			panel.webview.postMessage({command: 'load', guildNames: guilds, channelNames: channels});
 		})
 	);
-	console.log('Congratulations, your extension "parrot" is now active!');
 	context.subscriptions.push(
 		vscode.commands.registerCommand('parrot.helloWorld', function(userName, message, evt, userId) {
 			panel.webview.postMessage({command: 'newMessage', authorName: userName ,text: message, evtD: evt, authorId: userId});
-			console.log(message);
 		})
 	);
 	context.subscriptions.push(
@@ -154,12 +134,25 @@ function userIdToUsername(userId) {
 		headers: {"Authorization": `Bot ${process.env.BOT_KEY}`}
 	})
 	.then(response => response.json())
-	.catch(error => console.log(error));
+	.catch(error => console.error(error));
 }
 
 function replaceMentions(message) {
 	return userIdToUsername(message.substring(message.indexOf("<") + 2, message.indexOf(">")));
 }
+
+async function getCatFact() {
+	try {
+		const response = await fetch(`https://catfact.ninja/fact`);
+		if (!response.ok) {
+			throw Error(response.statusText);
+		}
+		return response.json();
+	} catch(error) {
+		return error.message;
+	}
+}
+
 
 module.exports = {
 	activate,
