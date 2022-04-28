@@ -14,10 +14,20 @@ let bot = new Discord.Client({
   autorun: true
 });
 
-
+console.log(bot.servers)
+console.log(bot.channels)
 bot.on('ready', function(event) {
-  console.log('Logged in as %s - %s\n', bot.username, bot.id);
-	vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels);
+  console.log('Logged in as %s - %s\n', bot.username, bot.id, bot.servers);
+
+	vscode.commands.executeCommand("parrot.load", bot.servers)
+	.then(edit => {
+		if (!edit) throw Error;
+
+		return vscode.workspace.applyEdit(edit);
+})
+	.then(undefined, err => {
+	 console.error('I am error');
+})
 	
 });
 
@@ -41,19 +51,19 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 					message: "Channel set"
 				});
 				break;
-				case "catfact":
-					let catPromise = CatFact.getFact();
-					catPromise.then(function(response) {
-						let body = JSON.parse(response);
-						bot.sendMessage({to: channelId, message: body})
-					})
+				// case "catfact":
+				// 	let catPromise = CatFact.getFact();
+				// 	catPromise.then(function(response) {
+				// 		let body = JSON.parse(response);
+				// 		bot.sendMessage({to: channelId, message: body})
+				// 	})
     }
   } else {
 		let incomingMessage = message;
-		while (incomingMessage.match(/<@[0-9]+>/g)) {
-			let user = await replaceMentions(incomingMessage);
-			incomingMessage = incomingMessage.replace(/<@[0-9]+>/, "@" + user.username);
-		}
+		// while (incomingMessage.match(/<@[0-9]+>/g)) {
+		// 	let user = await replaceMentions(incomingMessage);
+		// 	incomingMessage = incomingMessage.replace(/<@[0-9]+>/, "@" + user.username);
+		// }
 
 	
 		vscode.commands.executeCommand("parrot.helloWorld", user, incomingMessage, evt.d, userId);
@@ -116,11 +126,12 @@ function activate(context)	{
 				undefined,
 				context.subscriptions
 			);
+			vscode.commands.executeCommand("parrot.load", bot.servers)
 		})
 	);
 	context.subscriptions.push(
 		vscode.commands.registerCommand('parrot.load', function(guilds, channels) {
-			panel.webview.postMessage({command: 'load', guildNames: guilds, channelNames: channels });
+			panel.webview.postMessage({command: 'load', guildNames: guilds});
 		})
 	);
 	console.log('Congratulations, your extension "parrot" is now active!');
@@ -131,26 +142,26 @@ function activate(context)	{
 		})
 	);
 	context.subscriptions.push(
-		vscode.commands.registerCommand('parrot.selectChannel', async function(channelMessages){
-			await panel.webview.postMessage({command: 'getChannelMessages', messageArray: channelMessages});
+		vscode.commands.registerCommand('parrot.selectChannel', function(channelMessages){
+			panel.webview.postMessage({command: 'getChannelMessages', messageArray: channelMessages});
 		})
 	);
 }
 
 function deactivate() {}
 
-function userIdToUsername(userId) {
-	return fetch(`https://discord.com/api/v9/users/${userId}`, {
-		method: "GET",
-		headers: {"Authorization": `Bot ${process.env.BOT_KEY}`}
-	})
-	.then(response => response.json())
-	.catch(error => console.log(error));
-}
+// function userIdToUsername(userId) {
+// 	return fetch(`https://discord.com/api/v9/users/${userId}`, {
+// 		method: "GET",
+// 		headers: {"Authorization": `Bot ${process.env.BOT_KEY}`}
+// 	})
+// 	.then(response => response.json())
+// 	.catch(error => console.log(error));
+// }
 
-function replaceMentions(message) {
-	return userIdToUsername(message.substring(message.indexOf("<") + 2, message.indexOf(">")));
-}
+// function replaceMentions(message) {
+// 	return userIdToUsername(message.substring(message.indexOf("<") + 2, message.indexOf(">")));
+// }
 
 module.exports = {
 	activate,

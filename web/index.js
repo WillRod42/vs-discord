@@ -1,6 +1,8 @@
 const vscode = acquireVsCodeApi();
+
 let currentGuild;
 let currentChannel;
+
 $(document).ready(function() {
   let chat = "";
   let userName = "Anonymous";
@@ -55,18 +57,18 @@ $(document).ready(function() {
         const messageTimeStamp = timeStamp(message.evtD.timestamp);
         console.log(message.text);
         if (message.evtD.author.avatar && message.text.includes('https://tenor.com/view/')){
-          $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><img class="gif"src="${message.text}.gif"></div>`)
+          $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}</span></p><img class="gif"src="${message.text}.gif"></div>`);
           lastAuthor = message.authorName;
         }
         else if(message.evtD.author.avatar && lastAuthor !== message.authorName){
           lastAuthor = message.authorName;
-        $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}<span></p><p class='user-message'>${message.text}</p></div>`)
+        $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}</span></p><p class='user-message'>${message.text}</p></div>`);
         } else if(lastAuthor === message.authorName) {
-          $('#display-new-message').append(`<div class="message-container"><p class='user-message-later'>${message.text}</p></div>`)
+          $('#display-new-message').append(`<div class="message-container"><p class='user-message-later'>${message.text}</p></div>`);
         }
         else {
           lastAuthor = message.authorName;
-        $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.iconscout.com/icon/free/png-256/discord-3691244-3073764.png'><p class="author-name">${message.authorName} ${messageTimeStamp}</p><p class='user-message'>${message.text}</p>,</div>`)
+        $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.iconscout.com/icon/free/png-256/discord-3691244-3073764.png'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}</span></p><p class='user-message'>${message.text}</p></div>`);
         }
         break;
       
@@ -75,7 +77,10 @@ $(document).ready(function() {
         let lastChannelAuthor;
         // console.log(message.messageArray);
         message.messageArray.reverse().forEach(function(userMessage) {
-          console.log(userMessage);
+          console.log(userMessage.type);
+            if(userMessage.type === 7) {
+              return;
+            }
           if(userMessage['channel_id'] === currentChannel){
             let userMessageContent = userMessage.content;
             if(userMessage.content.match(/<@[0-9]+>/g)) {
@@ -106,8 +111,8 @@ $(document).ready(function() {
   });
 });
 
-window.addEventListener('message', event => {
-  const data = event.data;
+window.addEventListener('message', async event => {
+  const data = await event.data;
   switch (data.command){
     case 'load':
       console.log(data)

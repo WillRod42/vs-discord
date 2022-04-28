@@ -5,6 +5,7 @@ body {
   padding:0;
   height: 100vh;
   overflow: hidden;
+  overflow-wrap: break-word;
 }
 .guild-container {
   position: fixed;
