@@ -59,7 +59,7 @@ function activate(context)	{
 			panel = vscode.window.createWebviewPanel(
 				'parrot',
 				'Discord',
-				vscode.ViewColumn.One,
+				vscode.ViewColumn.Two,
 				{
 					enableScripts: true,
 					localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, "web"))],
