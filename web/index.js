@@ -17,7 +17,6 @@ $(document).ready(function() {
     $('#user-name-display').text(`${userName}`)
     $('#user-name-display').removeClass("hidden");
     $('#user-name').addClass('hidden');
-    console.log("click working")
   });
 
   $('#user-name-display').on('click', function() {
@@ -50,12 +49,9 @@ $(document).ready(function() {
   
   window.addEventListener('message', event => {
     const message = event.data;
-    //console.log(message.evtD.timestamp)
-    // const messageTimeStamp = timeStamp(message.evtD.timestamp);
     switch	(message.command)	{
       case 'newMessage':
         const messageTimeStamp = timeStamp(message.evtD.timestamp);
-        console.log(message);
         if(message.evtD.type === 7){
           return;
         }
