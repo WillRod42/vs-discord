@@ -94,7 +94,6 @@ $(document).ready(function() {
       case 'getChannelMessages':
         let allChannelMessages ="";
         let lastChannelAuthor;
-        console.log(message.messageArray);
         message.messageArray.reverse().forEach(function(userMessage) {
             if(userMessage.type === 7) {
               return;
