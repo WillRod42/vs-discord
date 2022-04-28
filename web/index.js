@@ -55,18 +55,33 @@ $(document).ready(function() {
     switch	(message.command)	{
       case 'newMessage':
         const messageTimeStamp = timeStamp(message.evtD.timestamp);
-        console.log(message.text);
+        console.log(message);
+        if(message.evtD.type === 7){
+          return;
+        }
+        if(!message.evtD.content && message.evtD.attachments.length < 1){
+          return;
+        }
         if (message.evtD.author.avatar && message.text.includes('https://tenor.com/view/')){
           $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}</span></p><img class="gif"src="${message.text}.gif"></div>`);
           lastAuthor = message.authorName;
-        }
-        else if(message.evtD.author.avatar && lastAuthor !== message.authorName){
+        } else if (!message.evtD.content && message.evtD.attachments.length >= 1 && message.evtD.author.avatar) {
+          message.evtD.attachments.forEach(function(attachment){
+            $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.evtD.author.id}/${message.evtD.author.avatar}'><p class="author-name">${message.evtD.author.username} <span class="user-timestamp">${messageTimeStamp}</span></p><img class="gif"src="${attachment['proxy_url']}"></div>`);
+          });
+          lastAuthor = message.authorName;
+        } else if(message.evtD.author.avatar && lastAuthor !== message.authorName){
           lastAuthor = message.authorName;
         $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.authorId}/${message.evtD.author.avatar}'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}</span></p><p class='user-message'>${message.text}</p></div>`);
         } else if(lastAuthor === message.authorName) {
           $('#display-new-message').append(`<div class="message-container"><p class='user-message-later'>${message.text}</p></div>`);
-        }
-        else {
+          lastAuthor = message.authorName;
+        } else if (!message.evtD.content && message.evtD.attachments.length >= 1) {
+          message.evtD.attachments.forEach(function(attachment){
+            $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${message.evtD.author.id}/${message.evtD.author.avatar}'><p class="author-name">${message.evtD.author.username} <span class="user-timestamp">${messageTimeStamp}</span></p><img class="gif"src="${attachment['proxy_url']}"></div>`);
+          });
+          lastAuthor = message.authorName;
+        } else {
           lastAuthor = message.authorName;
         $('#display-new-message').append(`<div class="message-container"><img class='user-icon'src='https://cdn.iconscout.com/icon/free/png-256/discord-3691244-3073764.png'><p class="author-name">${message.authorName} <span class="user-timestamp">${messageTimeStamp}</span></p><p class='user-message'>${message.text}</p></div>`);
         }
@@ -75,14 +90,17 @@ $(document).ready(function() {
       case 'getChannelMessages':
         let allChannelMessages ="";
         let lastChannelAuthor;
-        // console.log(message.messageArray);
+        console.log(message.messageArray);
         message.messageArray.reverse().forEach(function(userMessage) {
-          console.log(userMessage.type);
             if(userMessage.type === 7) {
+              return;
+            }
+            if(!userMessage.content && userMessage.attachments.length < 1){
               return;
             }
           if(userMessage['channel_id'] === currentChannel){
             let userMessageContent = userMessage.content;
+            
             if(userMessage.content.match(/<@[0-9]+>/g)) {
               userMessage.mentions.forEach(function(mention){
                 userMessageContent = userMessageContent.replaceAll(`<@${mention.id}>`, `<span class='user-mentions'>@${mention.username}</span>`);
@@ -92,13 +110,22 @@ $(document).ready(function() {
             if(userMessage.author.avatar && userMessage.content.includes('https://tenor.com/view/')){
               allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}</span></p><img class="gif"src="${userMessageContent}.gif"></div>`;
               lastChannelAuthor = userMessage.author.username;
+            } else if (!userMessage.content && userMessage.attachments.length >= 1 && userMessage.author.avatar) {
+              userMessage.attachments.forEach(function(attachment){
+                allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}</span></p><img class="gif"src="${attachment['proxy_url']}"></div>`;
+              });
+              lastChannelAuthor = userMessage.author.username;
             } else if (userMessage.author.avatar && lastChannelAuthor !== userMessage.author.username){
               allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.discordapp.com/avatars/${userMessage.author.id}/${userMessage.author.avatar}'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}</span></p><p class='user-message'>${userMessageContent}</p></div>`;
               lastChannelAuthor = userMessage.author.username;
             } else if (lastChannelAuthor === userMessage.author.username) {
               allChannelMessages += `<div class="message-container"><p class='user-message-later'>${userMessageContent}</p></div>`;
               lastChannelAuthor = userMessage.author.username;
-            } else {
+            } else if (!userMessage.content && userMessage.attachments.length >= 1) {
+              userMessage.attachments.forEach(function(attachment){
+                allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.iconscout.com/icon/free/png-256/discord-3691244-3073764.png'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}</span></p><img class="gif"src="${attachment['proxy_url']}"></div>`;
+              });
+            }else {
               lastChannelAuthor = userMessage.author.username;
               allChannelMessages += `<div class="message-container"><img class='user-icon'src='https://cdn.iconscout.com/icon/free/png-256/discord-3691244-3073764.png'><p class="author-name">${userMessage.author.username} <span class="user-timestamp">${userMessageTimeStamp}</span></p><p class='user-message'>${userMessageContent}</p></div>`;
             }
@@ -115,7 +142,6 @@ window.addEventListener('message', async event => {
   const data = await event.data;
   switch (data.command){
     case 'load':
-      console.log(data)
       Object.keys(data.guildNames).forEach(function(guild){
         let noIcon = "";
         if(!data.guildNames[guild].unavailable){
@@ -156,7 +182,7 @@ window.addEventListener('message', async event => {
         });
         $(this).addClass("channel-active");
         $(this).siblings().removeClass("channel-active");
-        $('#chat-box-header').html(`<span class="hash-sign">#</span> ${data.channelNames[this.id].name}`);
+        $('#chat-box-header').html(`${data.guildNames[currentGuild].name} <span class="hash-sign">#</span> ${data.channelNames[this.id].name}`);
         $('#chat').attr('placeholder',`Send Message To: # ${data.channelNames[this.id].name}`)
       });
       
