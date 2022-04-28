@@ -10,7 +10,7 @@ A VSCode extension that allows you to use your own Discord Bot to send and recei
 * JavaScript
 * jQuery
 * npm
-* webpack
+* Webview API
 * ESLint
 * Discord API
 * discord.io
