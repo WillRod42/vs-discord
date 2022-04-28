@@ -60,7 +60,7 @@ git clone https://github.com/WillRod42/vs-discord.git
 * Go back to the project directory and create a file named `.env`
   * Inside add this line and save the file
   ```
-  API_KEY=<Your key here without brackets>
+  BOT_KEY=<Your key here without brackets>
   ```
 
 ### Adding the Bot to Your Server
@@ -89,7 +89,36 @@ git clone https://github.com/WillRod42/vs-discord.git
 
 ## Known Issues
 
-* None
+* Sometimes the bot won't run correctly when starting the extension, resulting in a blank server list
+  * Restarting the extension should resolve the problem, sometimes needs to be restarted twice
+* Will also not populate servers correctly because of an error in the discord.io library
+  * To fix this open the top level of the project directory
+  * Open this file: `./node_modules/discord.io/lib/index.js`
+  * Scroll down to line 2616
+  * Insert this line directly below it: 
+  ```
+  let tempThis = this;
+  ```
+  * On what are now lines 2622 and 2623, replace the keyword `this` with `tempThis`
+  * This function should now look like this:
+  ```
+  function Member(client, server, data) {
+    copyKeys(data, this, ['user', 'joined_at',]);
+    this.id = data.user.id;
+    this.joined_at = Date.parse(data.joined_at);
+    this.color = colorFromRole(server, this);
+    let tempThis = this;
+    ['username', 'discriminator', 'bot', 'avatar', 'game'].forEach(function(k) {
+      if (k in Member.prototype) return;
+
+      Object.defineProperty(Member.prototype, k, {
+        get: function() { return client.users[tempThis.id][k]; },
+        set: function(v) { client.users[tempThis.id][k] = v; },
+        enumerable: true,
+      });
+    });
+  }
+  ```
 
 ## License
 
