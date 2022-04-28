@@ -14,11 +14,20 @@ let bot = new Discord.Client({
   autorun: true
 });
 
-
+console.log(bot.servers)
+console.log(bot.channels)
 bot.on('ready', function(event) {
-  console.log('Logged in as %s - %s\n', bot.username, bot.id);
-	// console.log(event);
-	vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels);
+  console.log('Logged in as %s - %s\n', bot.username, bot.id, bot.servers);
+
+	vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels)
+	.then(edit => {
+		if (!edit) throw Error;
+
+		return vscode.workspace.applyEdit(edit);
+})
+	.then(undefined, err => {
+	 console.error('I am error');
+})
 	
 });
 
@@ -26,7 +35,7 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 	if (message.substring(0,1) === '!') {
     let args = message.substring(1).split(" ");
     let cmd = args[0];
-
+		console.log(message);
     args = args.splice(1);
     switch(cmd) {
       case "test":
@@ -57,7 +66,6 @@ bot.on('message', async function (user, userId, channelId, message, evt) {
 		}
 
 	
-		// vscode.commands.executeCommand("parrot.selectChannel", selectedChannelMessages);
 		vscode.commands.executeCommand("parrot.helloWorld", user, incomingMessage, evt.d, userId);
 	}
 });
@@ -102,6 +110,7 @@ function activate(context)	{
 								to: message.channel,
 								message: message.text
 							})
+							console.log('alert working');
 							break;
 						case 'channel':
 							bot.getMessages({
@@ -117,24 +126,24 @@ function activate(context)	{
 				undefined,
 				context.subscriptions
 			);
+			vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels)
 		})
 	);
 	context.subscriptions.push(
 		vscode.commands.registerCommand('parrot.load', function(guilds, channels) {
-			panel.webview.postMessage({command: 'load', guildNames: guilds, channelNames: channels });
+			panel.webview.postMessage({command: 'load', guildNames: guilds, channelNames: channels});
 		})
 	);
 	console.log('Congratulations, your extension "parrot" is now active!');
 	context.subscriptions.push(
 		vscode.commands.registerCommand('parrot.helloWorld', function(userName, message, evt, userId) {
-			// vscode.window.showInformationMessage(message);
 			panel.webview.postMessage({command: 'newMessage', authorName: userName ,text: message, evtD: evt, authorId: userId});
 			console.log(message);
 		})
 	);
 	context.subscriptions.push(
-		vscode.commands.registerCommand('parrot.selectChannel', async function(channelMessages){
-			await panel.webview.postMessage({command: 'getChannelMessages', messageArray: channelMessages});
+		vscode.commands.registerCommand('parrot.selectChannel', function(channelMessages){
+			panel.webview.postMessage({command: 'getChannelMessages', messageArray: channelMessages});
 		})
 	);
 }

@@ -5,6 +5,7 @@ body {
   padding:0;
   height: 100vh;
   overflow: hidden;
+  overflow-wrap: break-word;
 }
 .guild-container {
   position: fixed;
@@ -171,7 +172,7 @@ body {
 
 #display-new-message {
   padding-left: 20px;
-  height: 89vh;
+  height: 88vh;
   overflow: scroll;
 }
 #chat-box-header {
