@@ -14,10 +14,8 @@ let bot = new Discord.Client({
   autorun: true
 });
 
-console.log(bot.servers)
-console.log(bot.channels)
 bot.on('ready', function(event) {
-  console.log('Logged in as %s - %s\n', bot.username, bot.id, bot.servers);
+  console.log('Logged in as %s - %s\n');
 
 	vscode.commands.executeCommand("parrot.load", bot.servers, bot.channels)
 	.then(edit => {
